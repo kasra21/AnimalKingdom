@@ -1,12 +1,21 @@
 package com.boot.animalkingdom.model;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class AjaxResponseBody {
 
     String msg;
+    ArrayList<String> resultText;		//result of the similarity result
 
-    public String getMsg() {
+	public ArrayList<String> getResultText() {
+		return resultText;
+	}
+
+	public void setResultText(ArrayList<String> resultText) {
+		this.resultText = resultText;
+	}
+
+	public String getMsg() {
         return msg;
     }
 

@@ -51,6 +51,7 @@ public class Controller {
 	public ResponseEntity<?> classifyImageResultViaAjax(@RequestParam("file") MultipartFile file) {
 
 		AjaxResponseBody result = new AjaxResponseBody();
+		ArrayList<String> resultText = new ArrayList<>();
 		
 		if (file.isEmpty()) {
             result.setMsg("redirect:uploadStatus");
@@ -69,55 +70,32 @@ public class Controller {
     		try (Tensor image = Tensor.create(imageBytes)) {
                 float[] labelProbabilities = executeInceptionGraph(graphDef, image);
                 ArrayList<Integer> bestLabelIdxs = top5Index(labelProbabilities);
-                //result.setText("");
                 for(int j=0; j<bestLabelIdxs.size(); j++) {
-                	result.setMsg(String.format(
-                            "BEST MATCH: %s (%.2f%% likely)",
-                            labels.get(bestLabelIdxs.get(j)), labelProbabilities[bestLabelIdxs.get(j)] * 100f));
                     System.out.println(
                             String.format(
                                     "BEST MATCH: %s (%.2f%% likely)",
                                     labels.get(bestLabelIdxs.get(j)), labelProbabilities[bestLabelIdxs.get(j)] * 100f));
+                    resultText.add(String.format(
+                                    "BEST MATCH: %s (%.2f%% likely)",
+                                    labels.get(bestLabelIdxs.get(j)), labelProbabilities[bestLabelIdxs.get(j)] * 100f));
                 }
+                result.setMsg("success");
+                result.setResultText(resultText);
             }
         } catch (IOException e) {
             e.printStackTrace();
+            result.setMsg("Exception Error");
+            result.setResultText(null);
         }
 
 		return ResponseEntity.ok(result);
 	}
 	
-
-//	@PostMapping("/api/deleteUser")
-//	public ResponseEntity<?> deleteUsersResultViaAjax(@Valid @RequestBody SearchOrDeleteCriteria delete,
-//			Errors errors) {
-//
-//		AjaxResponseBody result = new AjaxResponseBody();
-//
-//		// If error, just return a 400 bad request, along with the error message
-//		if (errors.hasErrors()) {
-//			result.setMsg(
-//					errors.getAllErrors().stream().map(x -> x.getDefaultMessage()).collect(Collectors.joining(",")));
-//			return ResponseEntity.badRequest().body(result);
-//		}
-//
-//		List<User> users = animalService.deleteUser(delete.getUsername());
-//		if (users.isEmpty()) {
-//			result.setMsg("could not delete user");
-//		} else {
-//			result.setMsg("success");
-//		}
-//		result.setResult(users);
-//
-//		return ResponseEntity.ok(result);
-//	}
-	
-	//--------------------------------------------------------------------------------------DarkZone
-
 	@GetMapping("/api/tensorFlowTest")
 	public ResponseEntity<?> tensorFlowTest() throws UnsupportedEncodingException {
 
 		AjaxResponseBody result = new AjaxResponseBody();
+		ArrayList<String> resultText = new ArrayList<>();
 		String modelDirPath = System.getProperty("user.dir") + "/tensorflowResource/";
 		String imagePath = System.getProperty("user.dir") + "/testResource/imageSingle/peachy.jpg";
 		
@@ -131,14 +109,20 @@ public class Controller {
             ArrayList<Integer> bestLabelIdxs = top5Index(labelProbabilities);
             //result.setText("");
             for(int j=0; j<bestLabelIdxs.size(); j++) {
-            	result.setMsg(String.format(
-                        "BEST MATCH: %s (%.2f%% likely)",
-                        labels.get(bestLabelIdxs.get(j)), labelProbabilities[bestLabelIdxs.get(j)] * 100f));
                 System.out.println(
                         String.format(
                                 "BEST MATCH: %s (%.2f%% likely)",
                                 labels.get(bestLabelIdxs.get(j)), labelProbabilities[bestLabelIdxs.get(j)] * 100f));
+                resultText.add(String.format(
+                        "BEST MATCH: %s (%.2f%% likely)",
+                        labels.get(bestLabelIdxs.get(j)), labelProbabilities[bestLabelIdxs.get(j)] * 100f));
             }
+            result.setMsg("success");
+            result.setResultText(resultText);
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.setMsg("Exception Error");
+            result.setResultText(null);
         }
 		
 		return ResponseEntity.ok(result);
@@ -206,8 +190,5 @@ public class Controller {
         
         return Top5Index;
     }
-
-	
-	//--------------------------------------------------------------------------------------DarkZone
 
 }

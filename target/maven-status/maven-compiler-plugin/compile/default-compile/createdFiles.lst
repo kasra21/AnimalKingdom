@@ -1,0 +1,6 @@
+com\boot\demo\services\AnimalService.class
+com\boot\demo\SpringBootWebApplication.class
+com\boot\demo\controller\Controller.class
+com\boot\demo\model\AjaxResponseBody.class
+com\boot\demo\controller\Controller$1.class
+com\boot\demo\controller\IndexController.class

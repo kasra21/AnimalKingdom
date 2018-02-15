@@ -1,6 +1,7 @@
-com\boot\animalkingdom\controller\IndexController.class
-com\boot\animalkingdom\model\AjaxResponseBody.class
-com\boot\animalkingdom\controller\Controller$1.class
 com\boot\animalkingdom\services\AnimalService.class
 com\boot\animalkingdom\controller\Controller.class
 com\boot\animalkingdom\SpringBootWebApplication.class
+com\boot\animalkingdom\controller\IndexController.class
+com\boot\animalkingdom\model\AjaxResponseBody.class
+com\boot\animalkingdom\model\SimilarityReport.class
+com\boot\animalkingdom\controller\Controller$1.class

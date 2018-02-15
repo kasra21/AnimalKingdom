@@ -5,7 +5,16 @@ import java.util.ArrayList;
 public class AjaxResponseBody {
 
     String msg;
-    ArrayList<String> resultText;		//result of the similarity result
+    ArrayList<String> resultText;
+    ArrayList<SimilarityReport> result;
+	
+	public ArrayList<SimilarityReport> getResult() {
+		return result;
+	}
+
+	public void setResult(ArrayList<SimilarityReport> result) {
+		this.result = result;
+	}
 
 	public ArrayList<String> getResultText() {
 		return resultText;

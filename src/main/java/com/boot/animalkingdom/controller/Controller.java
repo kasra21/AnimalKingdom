@@ -16,6 +16,7 @@ import org.tensorflow.Tensor;
 import org.tensorflow.TensorFlow;
 
 import com.boot.animalkingdom.model.AjaxResponseBody;
+import com.boot.animalkingdom.model.SimilarityReport;
 import com.boot.animalkingdom.services.AnimalService;
 
 import javax.validation.Valid;
@@ -52,6 +53,7 @@ public class Controller {
 
 		AjaxResponseBody result = new AjaxResponseBody();
 		ArrayList<String> resultText = new ArrayList<>();
+		ArrayList<SimilarityReport> reports = new ArrayList<>();
 		
 		if (file.isEmpty()) {
             result.setMsg("redirect:uploadStatus");
@@ -78,14 +80,26 @@ public class Controller {
                     resultText.add(String.format(
                                     "BEST MATCH: %s (%.2f%% likely)",
                                     labels.get(bestLabelIdxs.get(j)), labelProbabilities[bestLabelIdxs.get(j)] * 100f));
+                    
+                    SimilarityReport report = new SimilarityReport();
+                    report.setDogType(labels.get(bestLabelIdxs.get(j)));
+                    report.setSimularityPercentage((double) (labelProbabilities[bestLabelIdxs.get(j)] * 100f));
+                    report.setSimularityPercentageStr(String.format(
+                            "%.2f%%",
+                            labelProbabilities[bestLabelIdxs.get(j)] * 100f));
+                    
+                    reports.add(report);
                 }
+                System.out.println();
                 result.setMsg("success");
                 result.setResultText(resultText);
+                result.setResult(reports);
             }
         } catch (IOException e) {
             e.printStackTrace();
             result.setMsg("Exception Error");
             result.setResultText(null);
+            result.setResult(null);
         }
 
 		return ResponseEntity.ok(result);
@@ -96,6 +110,8 @@ public class Controller {
 
 		AjaxResponseBody result = new AjaxResponseBody();
 		ArrayList<String> resultText = new ArrayList<>();
+		ArrayList<SimilarityReport> reports = new ArrayList<>();
+		
 		String modelDirPath = System.getProperty("user.dir") + "/tensorflowResource/";
 		String imagePath = System.getProperty("user.dir") + "/testResource/imageSingle/peachy.jpg";
 		
@@ -116,13 +132,24 @@ public class Controller {
                 resultText.add(String.format(
                         "BEST MATCH: %s (%.2f%% likely)",
                         labels.get(bestLabelIdxs.get(j)), labelProbabilities[bestLabelIdxs.get(j)] * 100f));
+                
+                SimilarityReport report = new SimilarityReport();
+                report.setDogType(labels.get(bestLabelIdxs.get(j)));
+                report.setSimularityPercentage((double) (labelProbabilities[bestLabelIdxs.get(j)] * 100f));
+                report.setSimularityPercentageStr(String.format(
+                        "%.2f%%",
+                        labelProbabilities[bestLabelIdxs.get(j)] * 100f));
+                
+                reports.add(report);
             }
             result.setMsg("success");
             result.setResultText(resultText);
+            result.setResult(reports);
         } catch (Exception e) {
             e.printStackTrace();
             result.setMsg("Exception Error");
             result.setResultText(null);
+            result.setResult(null);
         }
 		
 		return ResponseEntity.ok(result);

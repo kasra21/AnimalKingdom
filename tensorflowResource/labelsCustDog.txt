@@ -1,0 +1,60 @@
+affenpinscher
+afghan hound
+australian terrier
+basenji
+bloodhound
+bluetick
+border collie
+boxer
+brabancon griffon
+bull mastiff
+cairn
+cardigan
+chesapeake bay retriever
+chihuahua
+dandie dinmont
+dhole
+dingo
+doberman
+english foxhound
+eskimo dog
+flat coated retriever
+french bulldog
+german shepherd
+german short haired pointer
+giant schnauzer
+golden retriever
+greater swiss mountain dog
+groenendael
+ibizan hound
+irish setter
+italian greyhound
+japanese spaniel
+keeshond
+komondor
+kuvasz
+labrador retriever
+leonberg
+lhasa
+malamute
+miniature pinscher
+miniature schnauzer
+newfoundland
+norwich terrier
+old english sheepdog
+otterhound
+pomeranian
+redbone
+rhodesian ridgeback
+saint bernard
+saluki
+samoyed
+soft coated wheaten terrier
+standard poodle
+tibetan mastiff
+toy poodle
+vizsla
+walker hound
+whippet
+wire haired fox terrier
+yorkshire terrier

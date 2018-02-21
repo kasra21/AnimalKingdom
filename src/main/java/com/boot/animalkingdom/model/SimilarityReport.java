@@ -2,15 +2,15 @@ package com.boot.animalkingdom.model;
 
 public class SimilarityReport {
 	
-	String dogType;
+	String type;
 	String simularityPercentageStr;
 	Double simularityPercentage;
 	
-	public String getDogType() {
-		return dogType;
+	public String getType() {
+		return type;
 	}
-	public void setDogType(String dogType) {
-		this.dogType = dogType;
+	public void setType(String dogType) {
+		this.type = dogType;
 	}
 	public String getSimularityPercentageStr() {
 		return simularityPercentageStr;

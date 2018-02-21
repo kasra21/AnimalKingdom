@@ -1,0 +1,7 @@
+# logs
+debug.log
+/logs
+
+#build
+/target
+

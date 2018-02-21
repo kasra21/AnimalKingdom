@@ -26,3 +26,9 @@ Then assuming that the database is already set up you may access the app from:
 	http://localhost:8080/
 	
 Or by making rest requests or by using postman or equivalent software
+
+### Licencing
+
+This app uses TensorFlow which can be used for commercial purposes:
+
+https://www.reddit.com/r/tensorflow/comments/4jrh2t/am_i_allowed_to_use_tensorflow_in_a_commercial/

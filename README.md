@@ -32,3 +32,7 @@ Or by making rest requests or by using postman or equivalent software
 This app uses TensorFlow which can be used for commercial purposes:
 
 https://www.reddit.com/r/tensorflow/comments/4jrh2t/am_i_allowed_to_use_tensorflow_in_a_commercial/
+
+### Contribution and Management
+
+https://confluence.atlassian.com/bitbucket/use-trello-boards-in-bitbucket-935890052.html

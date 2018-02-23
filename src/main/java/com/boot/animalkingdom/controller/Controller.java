@@ -108,6 +108,7 @@ public class Controller {
 		return ResponseEntity.ok(result);
 	}
 
+	@CrossOrigin
 	@PostMapping("/api/classifyDogImage")
 	public ResponseEntity<?> classifyDogImageResultViaAjax(@RequestParam("file") MultipartFile file) {
 

@@ -1,7 +1,7 @@
 # logs
 debug.log
 /logs
+/archived
 
 #build
 /target
-

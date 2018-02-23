@@ -7,6 +7,7 @@ bunny
 cat
 cat1
 cat3
+cat4
 chicken
 cow
 crab
@@ -27,6 +28,7 @@ dog19
 dog2
 dog20
 dog21
+dog22
 dog3
 dog4
 dog5
@@ -50,8 +52,8 @@ macropodidae
 macropodidae2
 monkey
 owl
+panda
 pig
-pnada
 rabbit
 shark
 sheeporgoat

@@ -29,6 +29,7 @@ cardigan
 chesapeake bay retriever
 chihuahua
 chihuahua1
+chihuahua2
 chow
 clumber
 cocker spaniel
@@ -60,6 +61,7 @@ irish terrier
 irish water spaniel
 irish wolfhound
 italian greyhound
+jack russell
 japanese spaniel
 keeshond
 kelpie

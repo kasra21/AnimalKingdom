@@ -20,11 +20,15 @@ import org.tensorflow.TensorFlow;
 
 import com.boot.animalkingdom.SpringBootWebApplication;
 import com.boot.animalkingdom.model.AjaxResponseBody;
+import com.boot.animalkingdom.model.BaseResponse;
+import com.boot.animalkingdom.model.GetLabelRequest;
+import com.boot.animalkingdom.model.GetLabelsResponse;
 import com.boot.animalkingdom.model.SimilarityReport;
 import com.boot.animalkingdom.services.AnimalService;
 
 import javax.validation.Valid;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
@@ -63,7 +67,7 @@ public class Controller {
 
 		if (file.isEmpty()) {
 			result.setMsg("redirect:uploadStatus");
-			return ResponseEntity.ok(result);
+			return ResponseEntity.badRequest().body(result);
 		}
 
 		try {
@@ -103,6 +107,7 @@ public class Controller {
 			result.setMsg(e.getMessage());
 			result.setResultText(null);
 			result.setResult(null);
+			return ResponseEntity.badRequest().body(result);
 		}
 
 		return ResponseEntity.ok(result);
@@ -118,7 +123,7 @@ public class Controller {
 
 		if (file.isEmpty()) {
 			result.setMsg("redirect:uploadStatus");
-			return ResponseEntity.ok(result);
+			return ResponseEntity.badRequest().body(result);
 		}
 
 		try {
@@ -158,6 +163,125 @@ public class Controller {
 			result.setMsg(e.getMessage());
 			result.setResultText(null);
 			result.setResult(null);
+			return ResponseEntity.badRequest().body(result);
+		}
+
+		return ResponseEntity.ok(result);
+	}
+	
+    @CrossOrigin
+    @PostMapping("/api/getLabels")
+    public ResponseEntity<?> getLabels(@Valid @RequestBody GetLabelRequest request, Errors errors) {
+
+    	GetLabelsResponse result = new GetLabelsResponse();
+        //If error, just return a 400 bad request, along with the error message
+        if (errors.hasErrors()) {
+            String errorMsg = "";
+            for(int i =0; i<errors.getAllErrors().size(); i++) {
+                errorMsg += errors.getAllErrors().get(i).getDefaultMessage();
+                if(i > 0) {
+                    errorMsg += "and/or";
+                }
+            }
+            result.setMsg(errorMsg);
+            return ResponseEntity.badRequest().body(result);
+        }
+        
+        try {
+			// Get the file and save it somewhere
+			String modelDirPath = System.getProperty("user.dir") + "/tensorflowResource/";
+			List<String> labels = new ArrayList<> ();
+			if("All".equals(request.getLabelGroup())) {
+				labels = readAllLinesOrExit(Paths.get(modelDirPath, "labels.txt"));
+				List<String> tempLabels = readAllLinesOrExit(Paths.get(modelDirPath, "labelsAllDogs.txt"));
+				labels.addAll(tempLabels);
+			}
+			if("Animals".equals(request.getLabelGroup())) {
+				labels = readAllLinesOrExit(Paths.get(modelDirPath, "labels.txt"));
+			}
+			else if("Dogs".equals(request.getLabelGroup())) {
+				labels = readAllLinesOrExit(Paths.get(modelDirPath, "labelsAllDogs.txt"));
+			}
+			List<String> labelsToReturn = new ArrayList<>();
+			for(String l : labels) {
+				if(!l.matches(".+\\d+")) {
+					labelsToReturn.add(l);
+				}
+			}
+									
+			if(labelsToReturn.isEmpty()) {
+				result.setMsg("failed to return labels");
+				logger.info("failed to return labels \n");
+				return ResponseEntity.badRequest().body(result);
+			}
+			
+			result.setLabels(labelsToReturn);
+			result.setMsg("success");
+			logger.info("success \n");
+
+
+		} catch (Exception e) {
+			//e.printStackTrace();
+			logger.error(e.getMessage() + "\n");
+			result.setMsg(e.getMessage());
+			return ResponseEntity.badRequest().body(result);
+		}
+        
+        
+        return ResponseEntity.ok(result);
+    }
+	
+	//uploads the file into the system
+	@CrossOrigin
+	@PostMapping("/api/uploadTmpImage")
+	public ResponseEntity<?> uploadTmpImage(@RequestParam("file") MultipartFile file, @RequestParam("label") String label) {
+
+		BaseResponse result = new BaseResponse();
+
+		if (file.isEmpty()) {
+			result.setMsg("redirect:uploadStatus");
+			return ResponseEntity.badRequest().body(result);
+		}
+
+		try {
+			// Get the file and save it somewhere
+			byte[] imageBytes = file.getBytes();
+			String modelDirPath = System.getProperty("user.dir") + "/tensorflowResource/";
+			Boolean containsLabel = false;
+			List<String> labels = readAllLinesOrExit(Paths.get(modelDirPath, "labelsAllDogs.txt"));
+			for( String l : labels ) {
+				if(l.toLowerCase().contains(label.toLowerCase())) {
+					containsLabel = true;
+					break;
+				}
+			}
+			if( !containsLabel ) {
+				logger.info("Failed to upload Help Image: label is not in the list of labels");
+				result.setMsg("Failed to upload Help Image: label is not in the list of labels");
+				return ResponseEntity.ok(result);
+			}
+			File tmpDir = new File(System.getProperty("user.dir")+"/tmp");
+			
+			if(!tmpDir.exists()) {
+				tmpDir.mkdir();
+			}
+			File convFile = new File(System.getProperty("user.dir")+"/tmp/"+label+"_"+file.getOriginalFilename());
+			if(!convFile.exists()) {
+				file.transferTo(convFile);
+			}
+			else {
+				convFile = new File(System.getProperty("user.dir")+"/tmp/_"+file.getOriginalFilename());
+				file.transferTo(convFile);	
+			}
+			result.setMsg("successfully uploaded the file");
+			logger.info("successfully uploaded the file \n");
+
+
+		} catch (IOException e) {
+			//e.printStackTrace();
+			logger.error(e.getMessage() + "\n");
+			result.setMsg(e.getMessage());
+			ResponseEntity.badRequest().body(result);
 		}
 
 		return ResponseEntity.ok(result);
@@ -206,6 +330,7 @@ public class Controller {
 			result.setMsg(e.getMessage());
 			result.setResultText(null);
 			result.setResult(null);
+			ResponseEntity.badRequest().body(result);
 		}
 
 		return ResponseEntity.ok(result);

@@ -2,9 +2,8 @@ package com.boot.animalkingdom.model;
 
 import java.util.ArrayList;
 
-public class AjaxResponseBody {
+public class AjaxResponseBody extends BaseResponse {
 
-    String msg;
     ArrayList<String> resultText;
     ArrayList<SimilarityReport> result;
 	

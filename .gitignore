@@ -5,4 +5,7 @@ debug.log
 
 #build
 /target
+
+#images
 /testResource
+/tmp

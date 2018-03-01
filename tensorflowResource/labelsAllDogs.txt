@@ -2,6 +2,7 @@ affenpinscher
 afghan hound
 african hunting dog
 airedale
+american bulldog
 american staffordshire terrier
 appenzeller
 australian terrier
@@ -30,6 +31,7 @@ chesapeake bay retriever
 chihuahua
 chihuahua1
 chihuahua2
+chihuahua3
 chow
 clumber
 cocker spaniel
@@ -48,6 +50,7 @@ flat coated retriever
 french bulldog
 german shepherd
 german short haired pointer
+german short haired pointer2
 giant schnauzer
 golden retriever
 gordon setter
@@ -55,6 +58,7 @@ greater swiss mountain dog
 great dane
 great pyrenees
 groenendael
+havanese
 ibizan hound
 irish setter
 irish terrier
@@ -71,6 +75,7 @@ kuvasz
 labrador retriever
 lakeland terrier
 leonberg
+leonberger
 lhasa
 malamute
 malinois
@@ -101,6 +106,7 @@ scotch terrier
 scottish deerhound
 sealyham terrier
 shetland sheepdog
+shiba inu
 shih tzu
 siberian husky
 silky terrier
@@ -118,6 +124,7 @@ walker hound
 weimaraner
 welsh springer spaniel
 west highland white terrier
+wheaten terrier
 whippet
 wire haired fox terrier
 yorkshire terrier

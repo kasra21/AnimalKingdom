@@ -59,7 +59,8 @@ public class Controller {
 
 	@CrossOrigin
 	@PostMapping("/api/classifyImage")
-	public ResponseEntity<?> classifyImageResultViaAjax(@RequestParam("file") MultipartFile file) {
+	public ResponseEntity<?> classifyImage(@RequestParam("file") MultipartFile file, @RequestParam("animal") String animal) {
+		//animal can be: All || Dog || Cat
 
 		AjaxResponseBody result = new AjaxResponseBody();
 		ArrayList<String> resultText = new ArrayList<>();
@@ -76,8 +77,16 @@ public class Controller {
 			String modelDirPath = System.getProperty("user.dir") + "/tensorflowResource/";
 
 			// graph
-			byte[] graphDef = readAllBytesOrExit(Paths.get(modelDirPath, "output.pb"));
-			List<String> labels = readAllLinesOrExit(Paths.get(modelDirPath, "labels.txt"));
+			byte[] graphDef;
+			List<String> labels;
+			if("All".equals(animal)) {
+				graphDef = readAllBytesOrExit(Paths.get(modelDirPath, "output.pb"));
+				labels = readAllLinesOrExit(Paths.get(modelDirPath, "labels.txt"));
+			}
+			else {
+				graphDef = readAllBytesOrExit(Paths.get(modelDirPath, "outputAll"+animal+"s.pb"));
+				labels = readAllLinesOrExit(Paths.get(modelDirPath, "labelsAll"+animal+"s.txt"));
+			}
 
 			try (Tensor image = Tensor.create(imageBytes)) {
 				float[] labelProbabilities = executeInceptionGraph(graphDef, image);
@@ -89,7 +98,7 @@ public class Controller {
 							labelProbabilities[bestLabelIdxs.get(j)] * 100f));
 
 					SimilarityReport report = new SimilarityReport();
-					report.setType(labels.get(bestLabelIdxs.get(j)));
+					report.setType(labels.get(bestLabelIdxs.get(j)).substring(0, 1).toUpperCase() + labels.get(bestLabelIdxs.get(j)).substring(1));
 					report.setSimularityPercentage((double) (labelProbabilities[bestLabelIdxs.get(j)] * 100f));
 					report.setSimularityPercentageStr(
 							String.format("%.2f%%", labelProbabilities[bestLabelIdxs.get(j)] * 100f));
@@ -104,62 +113,6 @@ public class Controller {
 		} catch (IOException e) {
 			logger.error(e.getMessage() + "\n");
 			//e.printStackTrace();
-			result.setMsg(e.getMessage());
-			result.setResultText(null);
-			result.setResult(null);
-			return ResponseEntity.badRequest().body(result);
-		}
-
-		return ResponseEntity.ok(result);
-	}
-
-	@CrossOrigin
-	@PostMapping("/api/classifyDogImage")
-	public ResponseEntity<?> classifyDogImageResultViaAjax(@RequestParam("file") MultipartFile file) {
-
-		AjaxResponseBody result = new AjaxResponseBody();
-		ArrayList<String> resultText = new ArrayList<>();
-		ArrayList<SimilarityReport> reports = new ArrayList<>();
-
-		if (file.isEmpty()) {
-			result.setMsg("redirect:uploadStatus");
-			return ResponseEntity.badRequest().body(result);
-		}
-
-		try {
-			// Get the file and save it somewhere
-			byte[] imageBytes = file.getBytes();
-			String modelDirPath = System.getProperty("user.dir") + "/tensorflowResource/";
-
-			// graph
-			byte[] graphDef = readAllBytesOrExit(Paths.get(modelDirPath, "outputAllDogs.pb"));
-			List<String> labels = readAllLinesOrExit(Paths.get(modelDirPath, "labelsAllDogs.txt"));
-
-			try (Tensor image = Tensor.create(imageBytes)) {
-				float[] labelProbabilities = executeInceptionGraph(graphDef, image);
-				ArrayList<Integer> bestLabelIdxs = top5Index(labelProbabilities);
-				for (int j = 0; j < bestLabelIdxs.size(); j++) {
-					logger.info(String.format("BEST MATCH: %s (%.2f%% likely) \n", labels.get(bestLabelIdxs.get(j)),
-							labelProbabilities[bestLabelIdxs.get(j)] * 100f));
-					resultText.add(String.format("BEST MATCH: %s (%.2f%% likely)", labels.get(bestLabelIdxs.get(j)),
-							labelProbabilities[bestLabelIdxs.get(j)] * 100f));
-
-					SimilarityReport report = new SimilarityReport();
-					report.setType(labels.get(bestLabelIdxs.get(j)));
-					report.setSimularityPercentage((double) (labelProbabilities[bestLabelIdxs.get(j)] * 100f));
-					report.setSimularityPercentageStr(
-							String.format("%.2f%%", labelProbabilities[bestLabelIdxs.get(j)] * 100f));
-
-					reports.add(report);
-				}
-				logger.info("\n");
-				result.setMsg("success");
-				result.setResultText(resultText);
-				result.setResult(reports);
-			}
-		} catch (IOException e) {
-			//e.printStackTrace();
-			logger.error(e.getMessage() + "\n");
 			result.setMsg(e.getMessage());
 			result.setResultText(null);
 			result.setResult(null);
@@ -172,6 +125,7 @@ public class Controller {
     @CrossOrigin
     @PostMapping("/api/getLabels")
     public ResponseEntity<?> getLabels(@Valid @RequestBody GetLabelRequest request, Errors errors) {
+    	//request.getLabelGroup can be All | Animal | Dog | Cat 
 
     	GetLabelsResponse result = new GetLabelsResponse();
         //If error, just return a 400 bad request, along with the error message
@@ -195,27 +149,26 @@ public class Controller {
 				labels = readAllLinesOrExit(Paths.get(modelDirPath, "labels.txt"));
 				List<String> tempLabels = readAllLinesOrExit(Paths.get(modelDirPath, "labelsAllDogs.txt"));
 				labels.addAll(tempLabels);
+				tempLabels = readAllLinesOrExit(Paths.get(modelDirPath, "labelsAllCats.txt"));
+				labels.addAll(tempLabels);
 			}
-			if("Animals".equals(request.getLabelGroup())) {
+			if("Animal".equals(request.getLabelGroup())) {
 				labels = readAllLinesOrExit(Paths.get(modelDirPath, "labels.txt"));
 			}
-			else if("Dogs".equals(request.getLabelGroup())) {
-				labels = readAllLinesOrExit(Paths.get(modelDirPath, "labelsAllDogs.txt"));
+			else {
+				labels = readAllLinesOrExit(Paths.get(modelDirPath, "labelsAll"+request.getLabelGroup()+"s.txt"));
 			}
-			List<String> labelsToReturn = new ArrayList<>();
-			for(String l : labels) {
-				if(!l.matches(".+\\d+")) {
-					labelsToReturn.add(l);
-				}
-			}
-									
-			if(labelsToReturn.isEmpty()) {
+			
+			if(labels.isEmpty()) {
 				result.setMsg("failed to return labels");
 				logger.info("failed to return labels \n");
 				return ResponseEntity.badRequest().body(result);
 			}
-			
-			result.setLabels(labelsToReturn);
+			for(int i=0; i<labels.size(); i++){
+				labels.set(i, labels.get(i).substring(0, 1).toUpperCase() + labels.get(i).substring(i));
+			}
+			Collections.sort(labels);
+			result.setLabels(labels);
 			result.setMsg("success");
 			logger.info("success \n");
 
@@ -242,7 +195,6 @@ public class Controller {
 			result.setMsg("redirect:uploadStatus");
 			return ResponseEntity.badRequest().body(result);
 		}
-
 		try {
 			// Get the file and save it somewhere
 			byte[] imageBytes = file.getBytes();

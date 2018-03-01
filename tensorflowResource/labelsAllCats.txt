@@ -8,3 +8,10 @@ birman
 bombay
 british shorthair
 burmese
+egyptian mau
+maine coon
+persian
+ragdoll
+russian blue
+siamese
+sphynx

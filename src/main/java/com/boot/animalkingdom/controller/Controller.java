@@ -152,7 +152,7 @@ public class Controller {
 				tempLabels = readAllLinesOrExit(Paths.get(modelDirPath, "labelsAllCats.txt"));
 				labels.addAll(tempLabels);
 			}
-			if("Animal".equals(request.getLabelGroup())) {
+			else if("Animal".equals(request.getLabelGroup())) {
 				labels = readAllLinesOrExit(Paths.get(modelDirPath, "labels.txt"));
 			}
 			else {
@@ -165,7 +165,7 @@ public class Controller {
 				return ResponseEntity.badRequest().body(result);
 			}
 			for(int i=0; i<labels.size(); i++){
-				labels.set(i, labels.get(i).substring(0, 1).toUpperCase() + labels.get(i).substring(i));
+				labels.set(i, labels.get(i).substring(0, 1).toUpperCase() + labels.get(i).substring(1));
 			}
 			Collections.sort(labels);
 			result.setLabels(labels);

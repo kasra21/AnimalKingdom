@@ -23,7 +23,7 @@ This will generate your binary file which you may run:
 Try to avoid directly running it with `mvn spring-boot:run` which may cause problems for shutting down the service.
 Then assuming that the database is already set up you may access the app from:
 
-	http://localhost:8080/
+	http://localhost:8090/
 	
 Or by making rest requests or by using postman or equivalent software
 

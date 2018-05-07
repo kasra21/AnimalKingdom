@@ -129,6 +129,12 @@ public class AnimalService {
 			else if("Animal".equals(request.getLabelGroup())) {
 				labels = readAllLinesOrExit(Paths.get(modelDirPath, "labels.txt"));
 			}
+			else if("Dog".equals(request.getLabelGroup())) {
+				labels = readAllLinesOrExit(Paths.get(modelDirPath, "labelsAllDogs.txt"));
+			}
+			else if("Cat".equals(request.getLabelGroup())) {
+				labels = readAllLinesOrExit(Paths.get(modelDirPath, "labelsAllCats.txt"));
+			}
 			else {
 				labels = readAllLinesOrExit(Paths.get(modelDirPath, "labelsAll"+request.getLabelGroup()+"s.txt"));
 			}

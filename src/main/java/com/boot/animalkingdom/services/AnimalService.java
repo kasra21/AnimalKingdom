@@ -178,6 +178,10 @@ public class AnimalService {
 			String modelDirPath = System.getProperty("user.dir") + "/tensorflowResource/";
 			Boolean containsLabel = false;
 			List<String> labels = readAllLinesOrExit(Paths.get(modelDirPath, "labelsAllDogs.txt"));
+			List<String> tempLabels = readAllLinesOrExit(Paths.get(modelDirPath, "labelsAllCats.txt"));
+			labels.addAll(tempLabels);
+			tempLabels = readAllLinesOrExit(Paths.get(modelDirPath, "labels.txt"));
+			labels.addAll(tempLabels);
 			for( String l : labels ) {
 				if(l.toLowerCase().contains(label.toLowerCase())) {
 					containsLabel = true;

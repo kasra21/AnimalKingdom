@@ -6,7 +6,7 @@ Animal Kingdom is a project and application that will allow you to take a pictur
 
 * **Clone The project**: 
 
-	 git clone https://kasra21@bitbucket.org/kasra21/animalkingdom.git
+	 git clone https://github.com/kasra21/AnimalKingdom.git
 
 * **Details**:
 
